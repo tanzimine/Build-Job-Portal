@@ -1,15 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, NavLink } from "react-router-dom";
+import AuthContext from "../../context/AuthContext/AuthContext";
 
 const Navbar = () => {
+  const { user, signOutUser } = useContext(AuthContext);
+  const handleSignOut = () => {
+    signOutUser()
+      .then(() => {
+        console.log('Successfully signed out');
+      })
+      .catch(error => {
+        console.log('Failed to sign out', error);
+      });
+  }
+  
+
   const links = (
     <>
-      <li>
-        <a>Item 1</a>
-      </li>
-      <li>
-        <a>Item 3</a>
-      </li>
+      <li><NavLink to="/"> Home </NavLink></li>
+      <li><NavLink to="/"> Home </NavLink></li>
+      <li><NavLink to="/"> Home </NavLink></li>
+
     </>
   );
 
@@ -38,19 +49,29 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-                {links}
+              {links}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <Link to="/" className="btn btn-ghost text-xl font-extrabold from-neutral-700"> Job Portal</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-          {links}
-          </ul>
+          <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <Link to="/register">Register</Link>
-          <a className="btn">Sign In</a>
+          {user ? (
+            <>
+              <Link to="/">
+                <button onClick={signOutUser} className="btn">Log Out</button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/register">Register</Link>
+              <Link to="/signIn">
+                <button className="btn">Sign In</button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>
